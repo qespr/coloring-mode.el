@@ -24,12 +24,37 @@
 
 ;;; Code:
 
+(defun coloring-mode-toggle-insert-mode ()
+  "Toggles between insert and color mode."
+  (interactive)
+  (setq coloring-mode-insert-mode (not coloring-mode-insert-mode))
+  (message (concat "Inser mode " (if coloring-mode-insert-mode
+				     "enabled."
+				   "disabled."))))
+
+(defun coloring-mode-RET ()
+  "Depending on the insert mode state, color char or insert newline."
+  (interactive)
+  (if coloring-mode-insert-mode
+      (newline)
+    (put-text-property
+     (point)
+     (+ (point) 1)
+     'font-lock-face '(:foreground "red"))))
+
 ;;C-c C-c - switch between insert and coloring mode
 ;;C-c C-e - Export
 ;;right mouse click and RET on char will change color to currently selected color
 ;;
-;; Todo: shorten the name, this is horrid
 (defvar coloring-mode-map nil "Keymap for `coloring-mode'")
+(defvar coloring-mode-insert-mode nil "Whether we insert or color")
+
+(progn
+  (setq coloring-mode-map (make-sparse-keymap))
+  (define-key coloring-mode-map (kbd "C-c C-c") 'coloring-mode-toggle-insert-mode)
+  (define-key coloring-mode-map (kbd "RET") '-coloring-mode-RET)
+  ;; by convention, major mode's keys should begin with the form C-c C-‹key›
+  )
 
 ;;(get-char-property position prop &optional object)
 ;;(get-pos-property position prop &optional object)
@@ -39,7 +64,11 @@
 ;; http://xahlee.info/emacs/emacs/elisp_text_properties.html
 
 (define-derived-mode coloring-mode fundamental-mode "coloring-mode"
-  "Major mode coloring ASCII art."
+  "Major mode coloring ASCII art.
+
+  \\{my-mode-map}"
+
+  (use-local-map coloring-mode-map)
   )
 
 ;; (provide 'coloring-mode)
