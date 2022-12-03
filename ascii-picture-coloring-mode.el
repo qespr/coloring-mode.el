@@ -24,6 +24,13 @@
 
 ;;; Code:
 
+;;C-c C-c - switch between insert and coloring mode
+;;C-c C-e - Export
+;;right mouse click and RET on char will change color to currently selected color
+;;
+;; Todo: shorten the name, this is horrid
+(defvar ascii-picture-coloring-mode-map nil "Keymap for `ascii-picture-coloring-mode'")
+
 ;;(get-char-property position prop &optional object)
 ;;(get-pos-property position prop &optional object)
 ;;(text-properties-at position &optional object)
@@ -31,5 +38,9 @@
 ;;(add-text-properties start end properties &optional object)
 ;; http://xahlee.info/emacs/emacs/elisp_text_properties.html
 
-(provide 'ascii-picture-coloring-mode)
+(define-derived-mode ascii-picture-coloring-mode fundamental-mode "ascii-picture-coloring"
+  "Major mode coloring ASCII art."
+  )
+
+;; (provide 'ascii-picture-coloring-mode)
 ;;; ascii-picture-coloring-mode.el ends here
