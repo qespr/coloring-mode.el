@@ -24,11 +24,18 @@
 
 ;;; Code:
 
+(defvar coloring-mode-map nil "Keymap for `coloring-mode'")
+(defvar coloring-mode-insert-mode nil "Whether we insert or color")
+(defvar coloring-mode-current-color "red" "Color used for coloring text")
+
+(setq coloring-mode-colors '(("red" . "\033[01;31m")))
+
+
 (defun coloring-mode-toggle-insert-mode ()
   "Toggles between insert and color mode."
   (interactive)
   (setq coloring-mode-insert-mode (not coloring-mode-insert-mode))
-  (message (concat "Inser mode " (if coloring-mode-insert-mode
+  (message (concat "Insert mode " (if coloring-mode-insert-mode
 				     "enabled."
 				   "disabled."))))
 
@@ -40,21 +47,16 @@
     (put-text-property
      (point)
      (+ (point) 1)
-     'font-lock-face '(:foreground "red"))))
+     'font-lock-face `(:foreground ,coloring-mode-current-color))))
 
 ;;C-c C-c - switch between insert and coloring mode
 ;;C-c C-e - Export
 ;;right mouse click and RET on char will change color to currently selected color
-;;
-(defvar coloring-mode-map nil "Keymap for `coloring-mode'")
-(defvar coloring-mode-insert-mode nil "Whether we insert or color")
 
 (progn
   (setq coloring-mode-map (make-sparse-keymap))
   (define-key coloring-mode-map (kbd "C-c C-c") 'coloring-mode-toggle-insert-mode)
-  (define-key coloring-mode-map (kbd "RET") '-coloring-mode-RET)
-  ;; by convention, major mode's keys should begin with the form C-c C-‹key›
-  )
+  (define-key coloring-mode-map (kbd "RET") '-coloring-mode-RET))
 
 ;;(get-char-property position prop &optional object)
 ;;(get-pos-property position prop &optional object)
